@@ -20,8 +20,14 @@ class MatchResultModel implements \JsonSerializable
     )
     {
         $this->results = [
-            $firstTeam->getId()   => $firstTeamGoalCount,
-            $secondTeam->getId() => $secondTeamGoalCount
+            $firstTeam->getId()   => [
+                'team' => $firstTeam,
+                'score' => $firstTeamGoalCount
+            ],
+            $secondTeam->getId() => [
+                'team' => $secondTeam,
+                'score' => $secondTeamGoalCount
+            ]
         ];
     }
 
@@ -64,21 +70,21 @@ class MatchResultModel implements \JsonSerializable
         $result = [];
 
         if ($this->isParticipated($team)) {
-            foreach ($this->results as $teamId => $scoredGoals) {
+            foreach ($this->results as $teamId => $data) {
 
                 $type = $teamId === $team->getId()
                     ? GoalTypeEnum::SCORED
                     : GoalTypeEnum::CONCEDED;
 
-                $result[$type] = $scoredGoals;
+                $result[$type] = $data['score'];
             }
         }
 
         return $result;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
-        return JsonHelper::encode($this->results);
+        return $this->results;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-class TeamModel
+class TeamModel implements \JsonSerializable
 {
     /** @var int */
     private $id;
@@ -24,5 +24,13 @@ class TeamModel
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name
+        ];
     }
 }
