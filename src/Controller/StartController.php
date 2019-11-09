@@ -56,9 +56,9 @@ class StartController
      */
     public function newAction(): Response
     {
-        $teams = $this->teamRepository->findAll();
+        $teams   = $this->teamRepository->findAll();
         $matches = $this->matchesGenerator->generate($teams);
-        $weeks = $this->weeksFactory->getWeeks($teams, $matches);
+        $weeks   = $this->weeksFactory->getWeeks($teams, $matches);
 
         return Response::create($this->twig->render('start/by-weeks.html.twig', [
             'current_week' => $weeks[0],
@@ -71,7 +71,7 @@ class StartController
     /**
      * @Route(
      *     path = "/weeks/{week}",
-     *     methods = {"POST"},
+     *     methods = {"GET", "POST"},
      *     requirements = {"week" = "^\d+$"}
      * )
      *
@@ -88,10 +88,10 @@ class StartController
             return RedirectResponse::create('/');
         }
 
-        $number = $request->get('week') - 1;
-        $teams = $this->teamRepository->findAll();
+        $number  = $request->get('week') - 1;
+        $teams   = $this->teamRepository->findAll();
         $matches = $this->matchesFactory->getMatchesFromRequest($request);
-        $weeks = $this->weeksFactory->getWeeks($teams, $matches);
+        $weeks   = $this->weeksFactory->getWeeks($teams, $matches);
 
         return Response::create($this->twig->render('start/by-weeks.html.twig', [
             'current_week' => $weeks[$number],
@@ -102,7 +102,7 @@ class StartController
     }
 
     /**
-     * @Route(path="/weeks/all", methods={"POST"})
+     * @Route(path="/weeks/all", methods={"GET", "POST"})
      * @param Request $request
      * @return JsonResponse
      * @throws Error\LoaderError
@@ -116,9 +116,9 @@ class StartController
             return RedirectResponse::create('/');
         }
 
-        $teams = $this->teamRepository->findAll();
+        $teams   = $this->teamRepository->findAll();
         $matches = $this->matchesFactory->getMatchesFromRequest($request);
-        $weeks = $this->weeksFactory->getWeeks($teams, $matches);
+        $weeks   = $this->weeksFactory->getWeeks($teams, $matches);
 
         return Response::create($this->twig->render('start/all-weeks.html.twig', [
             'weeks' => $weeks
