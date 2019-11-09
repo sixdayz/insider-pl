@@ -1,0 +1,24 @@
+http:
+  address: 0.0.0.0:80
+  workers:
+    command: "php ../roadrunner/worker.php"
+    relay: "tcp://127.0.0.1:10000"
+
+static:
+  dir: "../public"
+  forbid: [".php", ".htaccess"]
+
+health:
+  address: 127.0.0.1:2114
+
+metrics:
+  address: 0.0.0.0:2112
+
+rpc:
+  enable: true
+  listen: tcp://127.0.0.1:6001
+
+limit:
+  services:
+    http:
+      maxMemory: 55

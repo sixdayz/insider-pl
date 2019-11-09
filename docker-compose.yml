@@ -1,0 +1,25 @@
+version: '3'
+services:
+
+  pl_app:
+    container_name: pl_app
+    image: pl_app
+    volumes:
+      - ./:/var/www/app
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 80:80
+    environment:
+      APP_ENV: dev
+      APP_SECRET: 12ea5561423k4jl2j4c5142d48fd983a49
+    healthcheck:
+      test: curl -f "http://127.0.0.1:2114" || exit 1
+      interval: 10s
+#    command: tail -f /dev/random
+    command: >
+      rr serve -d -v
+      -c roadrunner/config.yaml
+      -o http.workers.pool.numWorkers=1
+      -o http.workers.pool.maxJobs=1
