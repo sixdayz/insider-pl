@@ -108,14 +108,20 @@ class StartController
      * @throws Error\LoaderError
      * @throws Error\RuntimeError
      * @throws Error\SyntaxError
+     * @throws ModelNotFoundException
      */
     public function allWeeksAction(Request $request): Response
     {
+        if (!$request->request->has('matches')) {
+            return RedirectResponse::create('/');
+        }
+
         $teams = $this->teamRepository->findAll();
-        $matches = $this->matchesGenerator->generate($teams);
+        $matches = $this->matchesFactory->getMatchesFromRequest($request);
+        $weeks = $this->weeksFactory->getWeeks($teams, $matches);
 
         return Response::create($this->twig->render('start/all-weeks.html.twig', [
-            'weeks' => $this->weeksFactory->getWeeks($teams, $matches)
+            'weeks' => $weeks
         ]));
     }
 }
