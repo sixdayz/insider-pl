@@ -2,38 +2,44 @@
 
 namespace App\Model;
 
-class WeekStatsModel
+class WeekStatsModel implements \JsonSerializable
 {
     /** @var TeamStatsModel[] */
-    private $teams;
+    private $teamsStats;
 
     /** @var MatchResultModel[] */
     private $matches;
 
-    public function __construct()
-    {
-        $this->teams = [];
-        $this->matches = [];
-    }
+    /** @var int */
+    private $number;
 
-    public function addTeam(TeamStatsModel $team): self
+    /**
+     * @param int $number
+     * @param TeamStatsModel[] $teamsStats
+     */
+    public function __construct(int $number, array $teamsStats)
     {
-        $this->teams[$team->getId()] = $team;
-        return $this;
+        $this->number     = $number;
+        $this->matches    = [];
+        $this->teamsStats = $teamsStats;
     }
 
     public function addMatch(MatchResultModel $match): self
     {
         $this->matches[] = $match;
+        foreach ($this->teamsStats as $teamStats) {
+            $teamStats->applyMatchResult($match);
+        }
+
         return $this;
     }
 
     /**
      * @return TeamStatsModel[]
      */
-    public function getTeams(): array
+    public function getTeamsStats(): array
     {
-        return $this->teams;
+        return $this->teamsStats;
     }
 
     /**
@@ -42,5 +48,19 @@ class WeekStatsModel
     public function getMatches(): array
     {
         return $this->matches;
+    }
+
+    public function getNumber(): int
+    {
+        return $this->number;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'number'  => $this->number,
+            'matches' => $this->matches,
+            'teams'   => $this->teamsStats
+        ];
     }
 }

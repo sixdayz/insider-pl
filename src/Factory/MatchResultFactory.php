@@ -18,6 +18,11 @@ class MatchResultFactory
     }
 
     /**
+     * JSON Example:
+     *
+     * [{"5":0,"15":3},{"20":0,"5":2}]
+     * [{"first_team_id":score,"second_team_id":score},{…}]
+     *
      * @param string $json JSON string after match result model json encoded
      * @return MatchResultModel[]
      * @throws ModelNotFoundException
@@ -27,11 +32,11 @@ class MatchResultFactory
         $results = [];
         $data    = JsonHelper::decode($json);
 
-        foreach ($data as $item) {
+        foreach ($data as $match) {
 
             $resultMeta = [];
-            foreach ($item as $teamId => $meta) {
-                $resultMeta[] = [$teamId, $meta['score']];
+            foreach ($match as $teamId => $score) {
+                $resultMeta[] = [$teamId, $score];
             }
 
             $results[] = new MatchResultModel(

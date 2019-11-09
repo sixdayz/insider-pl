@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-class TeamStatsModel
+class TeamStatsModel implements \JsonSerializable
 {
     /** @var TeamModel */
     private $team;
@@ -82,5 +82,39 @@ class TeamStatsModel
     public function getGoalDifference(): int
     {
         return $this->goalDifference;
+    }
+
+    public function applyMatchResult(MatchResultModel $result): void
+    {
+        if ($result->isParticipated($this->team)) {
+            $this->played++;
+
+            if ($result->isWon($this->team)) {
+                $this->won++;
+                $this->points += 3;
+            }
+
+            if ($result->isDrawn($this->team)) {
+                $this->drawn++;
+                $this->points++;
+            }
+
+            if ($result->isLost($this->team)) {
+                $this->lost++;
+            }
+        }
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'team'      => $this->team->getName(),
+            'points'    => $this->points,
+            'played'    => $this->played,
+            'won'       => $this->won,
+            'drawn'     => $this->drawn,
+            'lost'      => $this->lost,
+            'gd'        => $this->goalDifference,
+        ];
     }
 }
