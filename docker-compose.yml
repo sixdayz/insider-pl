@@ -19,7 +19,7 @@ services:
       interval: 10s
 #    command: tail -f /dev/random
     command: >
-      rr serve -d -v
+      rr serve -v
       -c roadrunner/config.yaml
       -o http.workers.pool.numWorkers=1
       -o http.workers.pool.maxJobs=1

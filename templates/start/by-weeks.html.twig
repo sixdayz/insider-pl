@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    New results
+{% endblock %}
+
+{% block body %}
+
+    <h4>{{ current_week.getNumber }}th week results</h4>
+
+    <table>
+        <thead>
+            <tr>
+                <th>League Table</th>
+                <th>Match Reuslts</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Teams</th>
+                                <th>PTS</th>
+                                <th>P</th>
+                                <th>W</th>
+                                <th>D</th>
+                                <th>L</th>
+                                <th>GD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ts in current_week.getTeamsStats %}
+                                <tr>
+                                    <td>{{ ts.getTeam.getName }}</td>
+                                    <td>{{ ts.getPoints }}</td>
+                                    <td>{{ ts.getPlayed }}</td>
+                                    <td>{{ ts.getWon }}</td>
+                                    <td>{{ ts.getDrawn }}</td>
+                                    <td>{{ ts.getLost }}</td>
+                                    <td>{{ ts.getGoalDifference }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                        <tbody>
+                            {% for match in current_week.getMatches %}
+                                <tr>
+                                    <td>{{ match.getFirstTeam.getName }}</td>
+                                    <td>
+                                        {{ match.getFirstTeamScore }}
+                                        -
+                                        {{ match.getSecondTeamScore }}
+                                    </td>
+                                    <td>{{ match.getSecondTeam.getName }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <form action="/weeks/all" method="post">
+                        <input type="submit" value="Play All" />
+
+                        {% for w in weeks %}
+                            {% set week_number = loop.index0 %}
+
+                            {% for match in w.getMatches %}
+                                <input type="hidden" name="matches[{{ week_number }}][{{ loop.index0 }}][{{ match.getFirstTeam.getId }}]" value="{{ match.getFirstTeamScore }}">
+                                <input type="hidden" name="matches[{{ week_number }}][{{ loop.index0 }}][{{ match.getSecondTeam.getId }}]" value="{{ match.getSecondTeamScore }}">
+                            {% endfor %}
+                        {% endfor %}
+                    </form>
+                </td>
+                <td align="right">
+                    {% if has_next %}
+                        <form action="/weeks/{{ next_week.getNumber }}" method="post">
+                            <input type="submit" value="Next Week" />
+
+                            {% for w in weeks %}
+                                {% set week_number = loop.index0 %}
+
+                                {% for match in w.getMatches %}
+                                    <input type="hidden" name="matches[{{ week_number }}][{{ loop.index0 }}][{{ match.getFirstTeam.getId }}]" value="{{ match.getFirstTeamScore }}">
+                                    <input type="hidden" name="matches[{{ week_number }}][{{ loop.index0 }}][{{ match.getSecondTeam.getId }}]" value="{{ match.getSecondTeamScore }}">
+                                {% endfor %}
+                            {% endfor %}
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+{% endblock %}

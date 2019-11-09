@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Play All
+{% endblock %}
+
+{% block body %}
+    <p>
+        <a href="/">Generate new data</a>
+    </p>
+
+    {% for week in weeks %}
+        <h4>{{ week.getNumber }}th week results</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>League Table</th>
+                    <th>Match Reuslts</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Teams</th>
+                                    <th>PTS</th>
+                                    <th>P</th>
+                                    <th>W</th>
+                                    <th>D</th>
+                                    <th>L</th>
+                                    <th>GD</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ts in week.getTeamsStats %}
+                                    <tr>
+                                        <td>{{ ts.getTeam.getName }}</td>
+                                        <td>{{ ts.getPoints }}</td>
+                                        <td>{{ ts.getPlayed }}</td>
+                                        <td>{{ ts.getWon }}</td>
+                                        <td>{{ ts.getDrawn }}</td>
+                                        <td>{{ ts.getLost }}</td>
+                                        <td>{{ ts.getGoalDifference }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <tbody>
+                                {% for match in week.getMatches %}
+                                    <tr>
+                                        <td>{{ match.getFirstTeam.getName }}</td>
+                                        <td>
+                                            {{ match.getFirstTeamScore }}
+                                            -
+                                            {{ match.getSecondTeamScore }}
+                                        </td>
+                                        <td>{{ match.getSecondTeam.getName }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endfor %}
+{% endblock %}

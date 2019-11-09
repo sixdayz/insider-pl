@@ -11,6 +11,9 @@ class MatchResultModel implements \JsonSerializable
     /** @var array */
     private $results;
 
+    /** @var array */
+    private $resultValues;
+
     public function __construct(
         TeamModel $firstTeam,
         int $firstTeamGoalCount,
@@ -28,6 +31,28 @@ class MatchResultModel implements \JsonSerializable
                 'score' => $secondTeamGoalCount
             ]
         ];
+
+        $this->resultValues = array_values($this->results);
+    }
+
+    public function getFirstTeam(): TeamModel
+    {
+        return $this->resultValues[0]['team'];
+    }
+
+    public function getSecondTeam(): TeamModel
+    {
+        return $this->resultValues[1]['team'];
+    }
+
+    public function getFirstTeamScore(): int
+    {
+        return $this->resultValues[0]['score'];
+    }
+
+    public function getSecondTeamScore(): int
+    {
+        return $this->resultValues[1]['score'];
     }
 
     public function isWon(TeamModel $team): bool
