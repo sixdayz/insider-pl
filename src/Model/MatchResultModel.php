@@ -5,7 +5,6 @@ namespace App\Model;
 
 
 use App\Enum\GoalTypeEnum;
-use App\Helper\JsonHelper;
 
 class MatchResultModel implements \JsonSerializable
 {

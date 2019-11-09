@@ -102,6 +102,8 @@ class TeamStatsModel implements \JsonSerializable
             if ($result->isLost($this->team)) {
                 $this->lost++;
             }
+
+            // todo: calculate goal difference according by rules
         }
     }
 
