@@ -5,8 +5,9 @@ namespace App\Model;
 
 
 use App\Enum\GoalTypeEnum;
+use App\Helper\JsonHelper;
 
-class MatchResultModel
+class MatchResultModel implements \JsonSerializable
 {
     /** @var array */
     private $results;
@@ -74,5 +75,10 @@ class MatchResultModel
         }
 
         return $result;
+    }
+
+    public function jsonSerialize()
+    {
+        return JsonHelper::encode($this->results);
     }
 }

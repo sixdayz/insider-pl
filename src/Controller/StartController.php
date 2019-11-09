@@ -2,17 +2,32 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Generator\MatchesResultsGenerator;
+use App\Helper\JsonHelper;
+use App\Repository\TeamRepository;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class StartController
 {
     /**
      * @Route(path="/", methods={"GET"})
-     * @return JsonResponse
+     * @param MatchesResultsGenerator $generator
+     * @param TeamRepository $repository
+     * @return Response
      */
-    public function startAction(): JsonResponse
+    public function byWeeksAction(MatchesResultsGenerator $generator, TeamRepository $repository): Response
     {
-        return JsonResponse::create('App Instance');
+        $enc = JsonHelper::encode($generator->generate($repository->findAll()));
+        return Response::create($enc);
+    }
+
+    /**
+     * @Route(path="/all", methods={"GET"})
+     * @return Response
+     */
+    public function allWeeksAction(): Response
+    {
+        return Response::create('All');
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-use App\Helper\JsonHelper;
-
 class TeamModel
 {
     /** @var int */

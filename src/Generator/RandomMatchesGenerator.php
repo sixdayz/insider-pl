@@ -32,7 +32,7 @@ class RandomMatchesGenerator implements MatchesGeneratorInterface
                     $matchWithMyself = $secondTeam->getId() === $firstTeam->getId();
 
                     if (!$matchExists && !$matchWithMyself) {
-                        $resultPairs[$uniqueKey] = [$firstTeam->getName(), $secondTeam->getName()];
+                        $resultPairs[$uniqueKey] = [$firstTeam, $secondTeam];
                     }
                 }
             }
